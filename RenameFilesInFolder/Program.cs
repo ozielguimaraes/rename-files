@@ -9,13 +9,16 @@ namespace RenameFilesInFolder
         static void Main(string[] args)
         {
             Console.WriteLine("Type the repository of the files:");
-            var baseDirectory = Console.ReadLine();
+            //var baseDirectory = Console.ReadLine();
+            var baseDirectory = @"C:\Users\opaulasi\Downloads\bundle";
 
-            Console.WriteLine("Type the OLD filename(include the extension):");
-            var oldFileName = Console.ReadLine();
+            Console.WriteLine("Type the OLD filename:");
+            //var oldFileName = Console.ReadLine();
+            var oldFileName = "screen";
 
-            Console.WriteLine("Type the NEW filename(include the extension):");
-            var newFileName = Console.ReadLine();
+            Console.WriteLine("Type the NEW filename:");
+            //var newFileName = Console.ReadLine();
+            var newFileName = "login-background";
 
             RenameFile(baseDirectory, oldFileName, newFileName);
 
@@ -34,7 +37,15 @@ namespace RenameFilesInFolder
             var files = Directory.GetFiles(fullName).Where(x => x.ToLower().Contains(oldFileName.ToLower())).ToList();
             foreach (var item in files)
             {
-                var newName = item.Replace(oldFileName, newFileName);
+                var paths = item.Split('\\');
+                var fileNames = paths[paths.Length - 1].Split('.');
+                var name = fileNames[fileNames.Length - 2];
+                if (name != oldFileName) return;
+
+                var extension = fileNames[fileNames.Length - 1];
+
+                var index = item.IndexOf($"{name}.{extension}");
+                var newName = item.Replace($"{name}.{extension}", $"{newFileName}.{extension}");
                 File.Move(item, newName);
             }
             RenameFilesInFolder(fullName, oldFileName, newFileName);
